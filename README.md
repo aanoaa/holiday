@@ -22,7 +22,7 @@
 ### Create custom holidays ###
 
 ```
-$ curl -X POST --location \
+$ curl -X POST \
        -d "password=password to modify later" \
        -d "ymd=2018-07-07" \
        -d "desc=칠월칠석" \
@@ -38,3 +38,31 @@ http://localhost:3000/kr/1
     $ curl http://localhost:3000/kr/1
     $ curl http://localhost:3000/kr/1?year=2012
     $ curl http://localhost:3000/kr/1?verbose
+
+### Update custom holidays ###
+
+Add holidays.
+
+```
+$ curl -X PUT \
+       -d "password=password to modify later" \
+       -d "ymd=2018-05-04" \
+       -d "desc=어린이날 전날" \
+       -d "ymd=2018-05-06" \  # multiple values possible
+       -d "desc=어린이날 다음날" \
+       http://localhost:3000/kr/1
+
+http://localhost:3000/kr/1
+```
+
+Delete a exists extra holiday.
+
+```
+$ curl -X DELETE \
+       -d "password=password to modify later" \
+       -d "ymd=2018-05-04" \
+       -d "ymd=2018-05-06" \  # multiple values possible
+       http://localhost:3000/kr/1
+
+http://localhost:3000/kr/1
+```
