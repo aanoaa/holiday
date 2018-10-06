@@ -20,8 +20,9 @@ sub startup {
     my $r = $self->routes;
     $r->get('/')                ->to('root#index');
     $r->get('/:code')           ->to('root#origin')->name('holiday.origin');
-    $r->get('/:code/:extra_id') ->to('root#custom')->name('holiday.custom');
     $r->post('/:code')          ->to('root#create')->name('holiday.create');
+    $r->get('/:code/:extra_id') ->to('root#custom')->name('holiday.custom');
+    $r->put('/:code/:extra_id') ->to('root#update')->name('holiday.update');
 
     $self->_hooks;
 }

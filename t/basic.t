@@ -48,7 +48,26 @@ $t->post_ok('/kr' => form => {
 
 $t->get_ok('/kr/1?verbose')
     ->status_is(200)
-    ->content_like(qr/07\-07/, "Added custom holiday")
+    ->content_like(qr/07\-07/)
     ->content_like(qr/칠월칠석/, "Added custom holiday");
+
+$t->put_ok('/kr/1' => form => {
+    password => 'wrong password',
+    ymd      => "$year-10-01",
+    desc     => '국군의 날',
+})->status_is(400)
+    ->json_like('/error' => qr/password/i);
+
+$t->put_ok('/kr/1' => form => {
+    password => 'secret',
+    ymd      => "$year-10-01",
+    desc     => '국군의 날',
+})->status_is(200)
+    ->content_like(qr/^http/, "response absolute path as text");
+
+$t->get_ok('/kr/1?verbose')
+    ->status_is(200)
+    ->content_like(qr/10\-01/)
+    ->content_like(qr/국군의 날/, "Updated custom holiday");
 
 done_testing();
