@@ -107,6 +107,7 @@ sub custom {
 
 =head2 create
 
+    # holiday.create
     POST /:code
     {
       password : required
