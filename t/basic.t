@@ -43,7 +43,8 @@ $t->post_ok('/kr' => form => {
     password => 'secret',
     ymd      => "$year-07-07",
     desc     => '칠월칠석',
-})->header_is('Location' => '/kr/1');
+})->status_is(201)
+    ->content_like(qr/^http/, "response absolute path as text");
 
 $t->get_ok('/kr/1?verbose')
     ->status_is(200)

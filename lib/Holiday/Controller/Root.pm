@@ -165,10 +165,12 @@ sub create {
         return $self->abort(500, "Failed to create a extra holidays: $@");
     }
 
-    $self->redirect_to(
-        'holiday.custom',
-        code     => $code,
-        extra_id => $extra_id
+    $self->render(
+        text => $self->url_for(
+            'holiday.custom',
+            code     => $code,
+            extra_id => $extra_id)->to_abs,
+        status => 201
     );
 }
 
