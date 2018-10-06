@@ -70,4 +70,15 @@ $t->get_ok('/kr/1?verbose')
     ->content_like(qr/10\-01/)
     ->content_like(qr/국군의 날/, "Updated custom holiday");
 
+$t->delete_ok('/kr/1' => form => {
+    password => 'secret',
+    ymd      => "$year-10-01",
+})->status_is(200)
+    ->content_like(qr/^http/, "response absolute path as text");
+
+$t->get_ok('/kr/1?verbose')
+    ->status_is(200)
+    ->content_unlike(qr/10\-01/)
+    ->content_unlike(qr/국군의 날/, "Deleted custom holiday");
+
 done_testing();

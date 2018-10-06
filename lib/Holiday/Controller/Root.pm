@@ -166,6 +166,66 @@ sub update {
     );
 }
 
+=head2 delete
+
+    # holiday.delete
+    DELETE /:code/:extra_id
+    {
+      password : required
+      ymd      : required; yyy-mm-dd; multiple values possible
+    }
+
+=cut
+
+sub delete {
+    my $self     = shift;
+    my $code     = $self->param('code');
+    my $extra_id = $self->param('extra_id');
+
+    my $db = $self->sqlite->db;
+    my ($stmt, @bind) = $self->sqlite->abstract->where({ id => $extra_id });
+    my $extra = $db->query('SELECT * FROM extra' . $stmt, @bind)->hash;
+    return $self->abort(404, "ID not found: $extra_id") unless $extra;
+
+    my $v = $self->validation;
+    $v->required('password');
+    $v->required('ymd')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->abort( 400, 'Parameter validation failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $password   = $v->param('password');
+    my $every_ymd  = $v->every_param('ymd');
+
+    my $salt   = substr $extra->{password}, -10;
+    my $secret = substr $extra->{password}, 0, -10;
+    if (sha256_hex($password . $salt) ne $secret) {
+        return $self->abort(400, "Wrong password");
+    }
+
+    eval {
+        my $tx = $db->begin;
+        for my $ymd (@$every_ymd) {
+            $db->delete('extra_holiday', { holiday => $ymd });
+        }
+        $tx->commit;
+    };
+
+    if ($@) {
+        return $self->abort(500, "Failed to update extra holidays: $@");
+    }
+
+    $self->render(
+        text => $self->url_for(
+            'holiday.custom',
+            code     => $code,
+            extra_id => $extra_id)->to_abs,
+        status => 200
+    );
+}
+
 =head2 create
 
     # holiday.create
