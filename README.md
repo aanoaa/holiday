@@ -66,3 +66,7 @@ $ curl -X DELETE \
 
 http://localhost:3000/kr/1
 ```
+
+### Build docker image ###
+
+    $ docker build -f Dockerfile -t aanoaa/holiday .

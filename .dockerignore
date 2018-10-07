@@ -1,0 +1,16 @@
+# files
+*.db
+*.db-shm
+*.db-wal
+.dockerignore
+.editorconfig
+.git
+.gitignore
+Dockerfile
+LICENSE
+README.md
+run
+
+# directories
+log/
+t/
