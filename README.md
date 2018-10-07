@@ -75,10 +75,23 @@ http://localhost:3000/kr/1
 
 ### Run container ###
 
-    $ docker run --name "holiday" --rm -d -p "5000:5000" aanoaa/holiday
+    $ docker run --name "holiday" \
+                 --rm \
+                 -d \
+                 -p "5000:5000" \
+                 aanoaa/holiday
 
     # for verbose stdout
-    $ docker run --name "holiday" --rm -d -p "5000:5000" aanoaa/holiday morbo
+    $ docker run --name "holiday" \
+                 --rm \
+                 -d \
+                 -p "5000:5000" \
+                 aanoaa/holiday morbo
 
     # persistent database option
-    $ docker run --name "holiday" --rm -d -p "5000:5000" -v db:/home/holiday/app/db aanoaa/holiday
+    $ docker run --name "holiday" \
+                 --rm \
+                 -d \
+                 -p "5000:5000" \
+                 -v db:/home/holiday/app/db \
+                 aanoaa/holiday
