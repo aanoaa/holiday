@@ -67,6 +67,15 @@ $ curl -X DELETE \
 http://localhost:3000/kr/1
 ```
 
+## Docker ##
+
 ### Build docker image ###
 
     $ docker build -f Dockerfile -t aanoaa/holiday .
+
+### Run container ###
+
+    $ docker run --name "holiday" --rm -d -p "5000:5000" aanoaa/holiday
+
+    # for verbose stdout
+    $ docker run --name "holiday" --rm -d -p "5000:5000" aanoaa/holiday morbo
