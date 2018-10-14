@@ -54,6 +54,14 @@ sub origin {
     my $verbose = defined $self->param('verbose');
 
     my $holidays = $self->holidays($code, $year, { verbose => $verbose });
+
+    if ($verbose) {
+        $holidays = {
+            name => 'original',
+            dates => $holidays,
+        };
+    }
+
     $self->render(json => $holidays);
 }
 
@@ -101,7 +109,15 @@ sub custom {
         }
     }
 
-    $holidays = [sort @$holidays] unless $verbose;
+    if ($verbose) {
+        $holidays = {
+            name => $extra->{name},
+            dates => $holidays,
+        };
+    } else {
+        $holidays = [sort @$holidays]
+    }
+
     $self->render(json => $holidays);
 }
 
@@ -231,6 +247,7 @@ sub delete {
     # holiday.create
     POST /:code
     {
+      name     : required
       password : required
       ymd      : required; yyy-mm-dd; multiple values possible
       desc     : required; multiple values possible
@@ -243,6 +260,7 @@ sub create {
     my $code = $self->param('code');
 
     my $v = $self->validation;
+    $v->required('name');
     $v->required('password');
     $v->required('ymd')->like(qr/^\d{4}-\d{2}-\d{2}$/);
     $v->required('desc');
@@ -252,6 +270,7 @@ sub create {
         return $self->abort( 400, 'Parameter validation failed: ' . join( ', ', @$failed ) );
     }
 
+    my $name       = $v->param('name');
     my $password   = $v->param('password');
     my $every_ymd  = $v->every_param('ymd');
     my $every_desc = $v->every_param('desc');
@@ -263,6 +282,7 @@ sub create {
         my $salt   = substr(time, 0, 10);
         my $secret = sha256_hex($password . $salt) . $salt;
         $extra_id  = $db->insert('extra', {
+            name     => $name,
             code     => $code,
             password => $secret,
         })->last_insert_id;

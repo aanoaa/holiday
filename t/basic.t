@@ -35,11 +35,14 @@ $t->get_ok('/kr?year=2017')
 $t->get_ok('/kr?verbose')
     ->status_is(200)
     ->json_is(
-        "/$year-01-01" => "신정",
+        "/name" => "original",
+    )->json_is(
+        "/dates/$year-01-01" => "신정",
         'got description with verbose param'
     );
 
 $t->post_ok('/kr' => form => {
+    name     => 'the first custom holidays',
     password => 'secret',
     ymd      => "$year-07-07",
     desc     => '칠월칠석',
@@ -48,6 +51,9 @@ $t->post_ok('/kr' => form => {
 
 $t->get_ok('/kr/1?verbose')
     ->status_is(200)
+    ->json_is(
+        "/name" => "the first custom holidays"
+    )
     ->content_like(qr/07\-07/)
     ->content_like(qr/칠월칠석/, "Added custom holiday");
 

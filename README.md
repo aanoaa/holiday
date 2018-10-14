@@ -23,6 +23,7 @@
 
 ```
 $ curl -X POST \
+       -d "name=this is custom holidays name" \
        -d "password=password to modify later" \
        -d "ymd=2018-07-07" \
        -d "desc=칠월칠석" \

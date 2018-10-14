@@ -49,6 +49,7 @@ __DATA__
 CREATE TABLE IF NOT EXISTS extra (
   id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   code       TEXT    NOT NULL,
+  name       TEXT    NOT NULL,
   password   TEXT    NOT NULL,
   created_at TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
