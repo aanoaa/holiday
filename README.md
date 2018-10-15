@@ -68,6 +68,17 @@ $ curl -X DELETE \
 http://localhost:3000/kr/1
 ```
 
+Update name.
+
+```
+$ curl -X PUT \
+       -d "name=my custom holiday name" \
+       -d "password=password to modify later" \
+       http://localhost:3000/kr/1
+
+http://localhost:3000/kr/1
+```
+
 ## Docker ##
 
 ### Build docker image ###
