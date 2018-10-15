@@ -126,9 +126,10 @@ sub custom {
     # holiday.update
     PUT /:code/:extra_id
     {
+      name     : optional
       password : required
-      ymd      : required; yyy-mm-dd; multiple values possible
-      desc     : required; multiple values possible
+      ymd      : optional; yyy-mm-dd; multiple values possible
+      desc     : optional; multiple values possible
     }
 
 =cut
@@ -144,15 +145,17 @@ sub update {
     return $self->abort(404, "ID not found: $extra_id") unless $extra;
 
     my $v = $self->validation;
+    $v->optional('name');
     $v->required('password');
-    $v->required('ymd')->like(qr/^\d{4}-\d{2}-\d{2}$/);
-    $v->required('desc');
+    $v->optional('ymd')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+    $v->optional('desc');
 
     if ( $v->has_error ) {
         my $failed = $v->failed;
         return $self->abort( 400, 'Parameter validation failed: ' . join( ', ', @$failed ) );
     }
 
+    my $name       = $v->param('name');
     my $password   = $v->param('password');
     my $every_ymd  = $v->every_param('ymd');
     my $every_desc = $v->every_param('desc');
@@ -165,6 +168,7 @@ sub update {
 
     eval {
         my $tx = $db->begin;
+        $db->update('extra', { name => $name }) if $name;
         $self->_create_extra_holiday($db, $extra->{id}, $every_ymd, $every_desc);
         $tx->commit;
     };

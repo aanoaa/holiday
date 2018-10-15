@@ -65,6 +65,16 @@ $t->put_ok('/kr/1' => form => {
     ->json_like('/error' => qr/Unauthorized/i);
 
 $t->put_ok('/kr/1' => form => {
+    name     => 'other name',
+    password => 'secret',
+})->status_is(200)
+    ->content_like(qr/^http/, "response absolute path as text");
+
+$t->get_ok('/kr/1?verbose')
+    ->status_is(200)
+    ->json_is("/name" => "other name", "name is updated");
+
+$t->put_ok('/kr/1' => form => {
     password => 'secret',
     ymd      => "$year-10-01",
     desc     => '국군의 날',
