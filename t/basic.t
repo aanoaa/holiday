@@ -61,8 +61,8 @@ $t->put_ok('/kr/1' => form => {
     password => 'wrong password',
     ymd      => "$year-10-01",
     desc     => '국군의 날',
-})->status_is(400)
-    ->json_like('/error' => qr/password/i);
+})->status_is(401)
+    ->json_like('/error' => qr/Unauthorized/i);
 
 $t->put_ok('/kr/1' => form => {
     password => 'secret',

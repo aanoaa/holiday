@@ -160,7 +160,7 @@ sub update {
     my $salt   = substr $extra->{password}, -10;
     my $secret = substr $extra->{password}, 0, -10;
     if (sha256_hex($password . $salt) ne $secret) {
-        return $self->abort(400, "Wrong password");
+        return $self->abort(401, "Unauthorized: Wrong password");
     }
 
     eval {
